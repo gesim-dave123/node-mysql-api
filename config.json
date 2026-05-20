@@ -6,13 +6,5 @@
     "password": "",
     "database": "node_mysql_api"
   },
-  "emailFrom": "info@my-node-api.com",
-  "smtpOptions": {
-    "host": "smtp.ethereal.email",
-    "port": 587,
-    "auth": {
-      "user": "manley5@ethereal.email",
-      "pass": "RNHAM4cQCtnuFCKk1v"
-    }
-  }
+  "emailFrom": "onboarding@resend.dev"
 }

@@ -70,13 +70,16 @@ function revokeToken(req: any, res: any, next: any) {
 
   if (!token) return res.status(400).json({ message: "Token is required" });
 
-  if (!req.user.ownsToken(token) && req.user.role !== Role.Admin) {
+  if (!req.auth.ownsToken(token) && req.auth.role !== Role.Admin) {
     return res.status(401).json({ message: "Unauthorized" });
   }
 
   accountService
     .revokeToken({ token, ipAddress })
-    .then(() => res.json({ message: "Token revoked" }))
+    .then(() => {
+      res.clearCookie("refreshToken", { httpOnly: true });
+      res.json({ message: "Token revoked" });
+    })
     .catch(next);
 }
 
@@ -179,7 +182,7 @@ function getAll(req: any, res: any, next: any) {
 }
 
 function getById(req: any, res: any, next: any) {
-  if (Number(req.params.id) !== req.user.id && req.user.role !== Role.Admin) {
+  if (Number(req.params.id) !== req.auth.id && req.auth.role !== Role.Admin) {
     return res.status(401).json({ message: "Unauthorized" });
   }
 
@@ -219,7 +222,7 @@ function updateSchema(req: any, res: any, next: any) {
     confirmPassword: Joi.string().valid(Joi.ref("password")).empty(""),
   };
 
-  if (req.user.role === Role.Admin) {
+  if (req.auth.role === Role.Admin) {
     schemaRules.role = Joi.string().valid(Role.Admin, Role.User).empty("");
   }
 
@@ -228,7 +231,7 @@ function updateSchema(req: any, res: any, next: any) {
 }
 
 function update(req: any, res: any, next: any) {
-  if (Number(req.params.id) !== req.user.id && req.user.role !== Role.Admin) {
+  if (Number(req.params.id) !== req.auth.id && req.auth.role !== Role.Admin) {
     return res.status(401).json({ message: "Unauthorized" });
   }
 
@@ -239,7 +242,7 @@ function update(req: any, res: any, next: any) {
 }
 
 function _delete(req: any, res: any, next: any) {
-  if (Number(req.params.id) !== req.user.id && req.user.role !== Role.Admin) {
+  if (Number(req.params.id) !== req.auth.id && req.auth.role !== Role.Admin) {
     return res.status(401).json({ message: "Unauthorized" });
   }
 
