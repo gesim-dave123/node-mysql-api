@@ -3,7 +3,7 @@ info:
   title: Node MySQL API
   version: 1.0.0
 servers:
-  - url: http://localhost:4000
+  - url: https://node-mysql-api-ylo3.onrender.com
 
 paths:
   /accounts/authenticate:
